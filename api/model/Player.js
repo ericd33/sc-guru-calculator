@@ -36,9 +36,21 @@ const playerSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  cardType: {
+    type: String,
+    required: true,
+  },
   pace: {
     type: Number,
     required: true,
+  },
+  cardImg: {
+    type: String,
+    required:true
+  },
+  futwiz_id: {
+    type: String,
+    required:true,
   },
   dribbling: { required: true, type: Number },
   defending: { required: true, type: Number },

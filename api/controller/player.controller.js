@@ -2,7 +2,10 @@ const Player = require('/model/Player.js');
 
 
 async function getAll(req, res) {
-    const players = await Player.find().limit(20);
+    const {page} = req.body;
+
+    const players = await Player.find().limit(2);
+    console.log(players)
     res.send(players);
 }
 

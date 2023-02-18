@@ -11,6 +11,7 @@ const Country = require('./model/Country.js');
 const League = require('./model/League.js');
 const Club = require('./model/Club.js');
 const Position = require("./model/Position.js");
+const customTypes = ['sg_custom_villain']
 mongoose.set('strictQuery', false);
 app.use(cors());
 // Middlewares
@@ -52,23 +53,28 @@ app.post("/getfields", async (req, res) => {
 })
 
 app.post("/getall", async (req, res) => {
-    const players = await Player.find();
+  const {page} = req.body
+    const players = await Player.find().limit(20).skip(page * 20);
     return res.send(players);
 })
 
 app.post("/addplayerbyuid", async (req, res) => {
-  console.log('addplayer')
+  console.log('addplayer2')
     axios.get('https://api.soccerguru.live/players/'+ req.body.uid).then(async (response)=> {
-
+      //replace spaces with dashes and make lowercase
+      const playerDataImage = `https://cdn.soccerguru.live/cards/master/${req.body.uid}.png`
     const newPlayer = new Player({
         cardName: response.data.card.card_name,
         fullName: response.data.card.full_name,
         mainposition: response.data.card.position,
-        country: response.data.card.nationality,
+        country: customTypes.includes(response.data.card.nationality)? 'toty' : response.data.card.nationality,
+        cardType: response.data.card.card_type,
         club: response.data.card.team_name,
         league: response.data.card.league,
+        futwiz_id: response.data.card.futwiz_id,
         pace: response.data.card.pace,
         shooting: response.data.card.shooting,
+        cardImg: playerDataImage,
         passing: response.data.card.passing,
         dribbling: response.data.card.dribbling,
         defending: response.data.card.defending,
@@ -96,7 +102,7 @@ app.post("/addplayerbyuid", async (req, res) => {
             if (!await Club.findOne({name: newClub.name})) await newClub.save();
             if (!await Player.findOne({guruKey: newPlayer.guruKey})) await newPlayer.save();
             if (!await Position.findOne({name: newPlayer.mainposition})) await new Position({name: newPlayer.mainposition}).save();
-
+            
         }catch(error) {
             console.log(error)
         }

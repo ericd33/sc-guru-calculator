@@ -1,8 +1,12 @@
+import { Typography } from '@mui/material';
 import React from 'react'
+import './playerCard.css'
 
 export default function PlayerCard({data}) {
-    console.log(data);
+
   return (
-    <div>PlayerCard</div>
+    <div className="playerCard" style={{backgroundImage: `url(${data.cardImg})`}}>
+      <Typography variant='h4' >{data.overallStats}</Typography>
+    </div>
   )
 }

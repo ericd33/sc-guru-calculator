@@ -22,6 +22,7 @@ const App = () => {
   const [data, loadData] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [uid, setUID] = useState("");
+  const [page, setPage] = useState(0);
   const [fields, setFields] = useState({
     leagues: [],
     clubs: [],
@@ -31,7 +32,7 @@ const App = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.post(`${API_URL}/getall`);
+      const response = await axios.post(`${API_URL}/getall`, {page});
       setPlayers(response.data);
       setLoading(false);
     } catch (error) {
@@ -51,6 +52,11 @@ const App = () => {
     fetchFields();
     fetchData();
   }, []);
+
+  useEffect(() => {
+  setLoading(true);
+  fetchData();
+  },[page])
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -165,13 +171,16 @@ const App = () => {
           <Grid item container spacing={2}>
             {players &&
               players.map((player) => (
-                <Grid item key={player.cardName} xs={12} sm={6} md={4}>
+                <Grid item key={player.cardName}>
                   <PlayerCard data={player} />
                 </Grid>
               ))}
           </Grid>
         )}
       </Grid>
+      Page {page}: <Button onClick={()=>setPage(page - 1)}>-</Button>
+      
+      <Button onClick={()=>setPage(page + 1)}>+</Button>
     </div>
   );
 };
