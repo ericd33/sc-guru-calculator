@@ -119,6 +119,6 @@ app.post("/addplayerbyuid", async (req, res) => {
   }
   
 // Starting the server...
-app.listen(process.env.PORT || 5000, () => {
+app.listen(3000, () => {
     console.log('server started');
   });
