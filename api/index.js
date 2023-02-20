@@ -54,12 +54,17 @@ app.post("/getfields", async (req, res) => {
 
 app.post("/getall", async (req, res) => {
   const {page} = req.body
+  try {
     const players = await Player.find().limit(20).skip(page * 20);
     return res.send(players);
+  } catch (err) {
+    return res.sendStatus(400);
+  }
 })
 
 app.post("/addplayerbyuid", async (req, res) => {
-  console.log('addplayer2')
+  if (!req.body.uid) return res.sendStatus(400);
+  try {
     axios.get('https://api.soccerguru.live/players/'+ req.body.uid).then(async (response)=> {
       //replace spaces with dashes and make lowercase
       const playerDataImage = `https://cdn.soccerguru.live/cards/master/${req.body.uid}.png`
@@ -85,7 +90,7 @@ app.post("/addplayerbyuid", async (req, res) => {
         rating: response.data.card.rating,
         overallStats: response.data.card.shooting + response.data.card.pace + response.data.card.passing + response.data.card.dribbling + response.data.card.defending + response.data.card.physicality,
     })
-        try {
+        
 
             //Check if country, league, club exists, if it doesn't add it
             const newCountry = new Country({
@@ -97,19 +102,23 @@ app.post("/addplayerbyuid", async (req, res) => {
             const newClub = new Club({
                 name: newPlayer.club
             });
+            if (!await Position.findOne({name: newPlayer.mainposition})) await new Position({name: newPlayer.mainposition}).save();
             if (!await Country.findOne({name: newCountry.name})) await newCountry.save();
             if (!await League.findOne({name: newLeague.name})) await newLeague.save();
             if (!await Club.findOne({name: newClub.name})) await newClub.save();
             if (!await Player.findOne({guruKey: newPlayer.guruKey})) await newPlayer.save();
             if (!await Position.findOne({name: newPlayer.mainposition})) await new Position({name: newPlayer.mainposition}).save();
             
-        }catch(error) {
-            console.log(error)
-        }
+        
 
-      }); 
-
-      res.send('ok');
+      }).catch(error => {
+        
+      }) 
+      return res.sendStatus(200);
+    }catch(error) {
+      return res.sendStatus(400)
+  }
+      
 
 })
 

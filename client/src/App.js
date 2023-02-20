@@ -19,17 +19,16 @@ import PlayerCard from "./components/PlayerCard";
 const App = () => {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [data, loadData] = useState({});
+  const [data, loadData] = useState({league: '', club: '', country: '', position: ''});
   const [searchQuery, setSearchQuery] = useState("");
   const [uid, setUID] = useState("");
   const [page, setPage] = useState(0);
   const [fields, setFields] = useState({
-    leagues: [],
-    clubs: [],
-    countries: [],
+    leagues: [''],
+    clubs: [''],
+    countries: [''],
   });
   const API_URL = process.env.REACT_APP_API_URL;
-
   const fetchData = async () => {
     try {
       const response = await axios.post(`${API_URL}/getall`, {page});
@@ -50,7 +49,6 @@ const App = () => {
   };
   useEffect(() => {
     fetchFields();
-    fetchData();
   }, []);
 
   useEffect(() => {
@@ -79,10 +77,7 @@ const App = () => {
     event.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${API_URL}/addplayerbyuid`, { uid: uid });
-
-      fetchData();
-      console.log("player added");
+      await axios.post(`${API_URL}/addplayerbyuid`, { uid: uid }).then(() => fetchData());
     } catch (error) {
       console.error(error);
     }
@@ -103,9 +98,8 @@ const App = () => {
   return (
     <div>
       <Grid container spacing={2} paddingTop={5} direction="column">
-        <Grid item container direction="column" mx="auto">
+        <Grid item container direction="row" mx="auto">
           <Grid item mx="auto">
-            <Typography>Search Player</Typography>
             <form onSubmit={handleSearch}>
               <Grid container direction='column'>
                 <Grid item mx='auto'>
@@ -117,14 +111,13 @@ const App = () => {
                   <Button type="submit">Search</Button>
                 </Grid>
                 <Grid item mx='auto'>
-                  <Typography>Filters</Typography>
-                  <Select name="league" onChange={handleSearchFieldChange}>
-                    <MenuItem value="">
+                  <Select value={data.league} label='All' name="league" onChange={handleSearchFieldChange}>
+                    <MenuItem value="" key='Alll'>
                       All
                     </MenuItem>
                     {fields.leagues
                       ? fields.leagues.map((league) => (
-                          <MenuItem value={league.name}>{league.name}</MenuItem>
+                          <MenuItem key={league.name} value={league.name}>{league.name}</MenuItem>
                         ))
                       : null}
                   </Select>
@@ -133,10 +126,10 @@ const App = () => {
                     label="Country"
                     onChange={handleSearchFieldChange}
                   >
-                    <MenuItem value="">All</MenuItem>
+                    <MenuItem key='allco' value=" ">All</MenuItem>
                     {fields.countries
                       ? fields.countries.map((country) => (
-                          <MenuItem value={country.name}>
+                          <MenuItem key={country.name} value={country.name}>
                             {country.name}
                           </MenuItem>
                         ))
@@ -147,10 +140,22 @@ const App = () => {
                     label="Club"
                     onChange={handleSearchFieldChange}
                   >
-                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value="" key='allcl'>All</MenuItem>
                     {fields.clubs
                       ? fields.clubs.map((club) => (
-                          <MenuItem value={club.name}>{club.name}</MenuItem>
+                          <MenuItem key={club.name} value={club.name}>{club.name}</MenuItem>
+                        ))
+                      : null}
+                  </Select>
+                  <Select
+                    name="position"
+                    label="Position"
+                    onChange={handleSearchFieldChange}
+                  >
+                    <MenuItem value="" key='allcl'>All</MenuItem>
+                    {fields.positions
+                      ? fields.positions.map((position) => (
+                          <MenuItem key={position.name} value={position.name}>{position.name}</MenuItem>
                         ))
                       : null}
                   </Select>
@@ -160,8 +165,14 @@ const App = () => {
           </Grid>
           <Grid item mx="auto">
             <form onSubmit={handleAddPlayer}>
-              <TextField label="UID" value={uid} onChange={handleUIDChange} />
+              <TextField label="Add player by UID" value={uid} onChange={handleUIDChange} />
+              <Button variant="outlined" type="submit">Add</Button>
             </form>
+          </Grid>
+          <Grid item mx="auto">
+          Page {page}: <Button variant='outlined' onClick={()=>(page > 0)?setPage(page - 1):""}>-</Button>
+      
+      <Button variant='outlined' onClick={()=>setPage(page + 1)}>+</Button>
           </Grid>
         </Grid>
 
@@ -171,16 +182,12 @@ const App = () => {
           <Grid item container spacing={2}>
             {players &&
               players.map((player) => (
-                <Grid item key={player.cardName}>
-                  <PlayerCard data={player} />
-                </Grid>
+                  <PlayerCard key={player.fullName} data={player} />
               ))}
           </Grid>
         )}
       </Grid>
-      Page {page}: <Button onClick={()=>setPage(page - 1)}>-</Button>
       
-      <Button onClick={()=>setPage(page + 1)}>+</Button>
     </div>
   );
 };
