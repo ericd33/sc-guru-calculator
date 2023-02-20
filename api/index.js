@@ -46,7 +46,7 @@ app.post("/getplayers", async (req, res) => {
   
 
   try {
-    const players = await Player.find(query).sort(sortQuery).limit(20).skip(page * 20);
+    const players = await Player.find(query).sort(sortQuery).skip(page * 20).limit(20);
     res.send(players);
   } catch(err) {
     console.log(err);

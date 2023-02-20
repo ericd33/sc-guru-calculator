@@ -37,6 +37,7 @@ const App = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const fetchData = async () => {
     try {
+      setLoading(true)
       const response = await axios.post(`${API_URL}/getplayers`, {
         fullName: searchQuery,
         page: page,
@@ -69,7 +70,6 @@ const App = () => {
 
   const handleSearch = async (event) => {
     event.preventDefault();
-    setLoading(true);
     fetchData();
   };
 
@@ -77,7 +77,9 @@ const App = () => {
     event.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${API_URL}/addplayerbyuid`, { uid: uid }).then(() => fetchData());
+      await axios.post(`${API_URL}/addplayerbyuid`, { uid: uid });
+      fetchData();
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
