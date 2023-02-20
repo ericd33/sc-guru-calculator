@@ -25,8 +25,17 @@ app.get("/",(req, res) => {
 })
 
 app.post("/getplayers", async (req, res) => {
-  const {fullName, league, club, country, position, page} = req.body
-  const query = {}
+  const {fullName, league, club, country, position, page, Plsort} = req.body
+  let query = {}
+  let sortQuery = {}
+  switch(Plsort) {
+    case 'OVR Descending': sortQuery = {overallStats: -1}; break;
+    case 'OVR Ascending': sortQuery = {overallStats: 1}; break;
+    case 'Rating Descending': sortQuery = {rating: -1}; break;
+    case 'Rating Ascending': sortQuery = {rating: 1}; break;
+    case 'Cost Descending': sortQuery = {buyCost: -1}; break;
+    case 'Cost Ascending': sortQuery = {buyCost: 1}; break;
+  }
 
   if (fullName && fullName.length > 0) query.fullName = {$regex: fullName, $options: 'i'}
   if (league && league.length > 0) query.league = league
@@ -34,8 +43,10 @@ app.post("/getplayers", async (req, res) => {
   if (country && country.length > 0) query.country = country
   if (position && position.length > 0) query.mainposition = position  
 
+  
+
   try {
-    const players = await Player.find(query).limit(20).skip(page * 20);
+    const players = await Player.find(query).sort(sortQuery).limit(20).skip(page * 20);
     res.send(players);
   } catch(err) {
     console.log(err);
@@ -52,22 +63,12 @@ app.post("/getfields", async (req, res) => {
   res.send({countries, leagues, clubs, positions})
 })
 
-app.post("/getall", async (req, res) => {
-  const {page} = req.body
-  try {
-    const players = await Player.find().limit(20).skip(page * 20);
-    return res.send(players);
-  } catch (err) {
-    return res.sendStatus(400);
-  }
-})
-
 app.post("/addplayerbyuid", async (req, res) => {
   if (!req.body.uid) return res.sendStatus(400);
   try {
     axios.get('https://api.soccerguru.live/players/'+ req.body.uid).then(async (response)=> {
       //replace spaces with dashes and make lowercase
-      const playerDataImage = `https://cdn.soccerguru.live/cards/master/${req.body.uid}.png`
+    const playerDataImage = `https://cdn.soccerguru.live/cards/master/${req.body.uid}.png`
     const newPlayer = new Player({
         cardName: response.data.card.card_name,
         fullName: response.data.card.full_name,

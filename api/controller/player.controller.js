@@ -1,14 +1,5 @@
 const Player = require('/model/Player.js');
 
-
-async function getAll(req, res) {
-    const {page} = req.body;
-
-    const players = await Player.find().limit(2);
-    console.log(players)
-    res.send(players);
-}
-
 async function addPlayer(req, res) {
 
     try{

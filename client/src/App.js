@@ -28,6 +28,7 @@ const App = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [uid, setUID] = useState("");
   const [page, setPage] = useState(0);
+  const [Plsort, setPlsort] = useState('OVR Descending')
   const [fields, setFields] = useState({
     leagues: [''],
     clubs: [''],
@@ -40,6 +41,7 @@ const App = () => {
         fullName: searchQuery,
         page: page,
         ...data,
+        Plsort
       });
 
       setPlayers(response.data);
@@ -92,14 +94,18 @@ const App = () => {
   const resetFiltersHandler = (event) => {
     event.preventDefault();
     setLoading(true);
-    loadData({league: '', club: '', country: '', position: ''})
     setSearchQuery('')
     setPage(0);
+    loadData({league: '', club: '', country: '', position: ''})
   }
 
   const handleSearchFieldChange = (event) => {
     loadData({ ...data, [event.target.name]: event.target.value });
   };
+
+  const handleSort = (event) => {
+    setPlsort(event.target.value)
+  }
 
   return (
     <div>
@@ -173,6 +179,14 @@ const App = () => {
                           <MenuItem key={position.name} value={position.name}>{position.name}</MenuItem>
                         ))
                       : null}
+                  </Select>
+                  <Select name='Plsort' onChange={handleSort}>
+                    <MenuItem key='OVR Ascending' value='OVR Ascending'>OVR Ascending</MenuItem>
+                    <MenuItem key='OVR Descending' value='OVR Descending'>OVR Descending</MenuItem>
+                    <MenuItem key='Cost Ascending' value='Cost Ascending'>Cost Ascending</MenuItem>
+                    <MenuItem key='Cost Descending' value='Cost Descending'>Cost Descending</MenuItem>
+                    <MenuItem key='Rating Ascending' value='Rating Ascending'>Rating Ascending</MenuItem>
+                    <MenuItem key='Rating Descending' value='Rating Descending'>Rating Descending</MenuItem>
                   </Select>
                 </Grid>
               </Grid>
