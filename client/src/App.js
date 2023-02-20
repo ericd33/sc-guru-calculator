@@ -63,7 +63,7 @@ const App = () => {
 
   useEffect(() => {
   fetchData();
-  },[page])
+  },[page, data])
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -88,6 +88,14 @@ const App = () => {
   const handleUIDChange = (event) => {
     setUID(event.target.value);
   };
+
+  const resetFiltersHandler = (event) => {
+    event.preventDefault();
+    setLoading(true);
+    loadData({league: '', club: '', country: '', position: ''})
+    setSearchQuery('')
+    setPage(0);
+  }
 
   const handleSearchFieldChange = (event) => {
     loadData({ ...data, [event.target.name]: event.target.value });
@@ -114,7 +122,7 @@ const App = () => {
                   <Button variant='contained' type="submit">Search</Button>
                 </Grid>
                 <Grid item mx='auto' sx={{display:'flex'}}>
-                  <Button variant='contained'><RestartAltIcon></RestartAltIcon></Button>
+                  <Button variant='contained' onClick={resetFiltersHandler}><RestartAltIcon></RestartAltIcon></Button>
                   <Select startAdornment={<EmojiEventsIcon/>} value={data.league} name="league" onChange={handleSearchFieldChange}>
                     <MenuItem value="" key='Alll'>
                       All
