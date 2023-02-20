@@ -1,5 +1,5 @@
 .playerCard {
-    background-position: cover;
+    background-position: 50% 50%;
     background-size: contain;
     background-repeat: no-repeat;
     width:200px;
@@ -8,3 +8,4 @@
     justify-content: center;
     align-items: flex-end;
 }
+
