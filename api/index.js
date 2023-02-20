@@ -25,17 +25,17 @@ app.get("/",(req, res) => {
 })
 
 app.post("/getplayers", async (req, res) => {
-  const {fullName, league, club, country, position} = req.body
+  const {fullName, league, club, country, position, page} = req.body
   const query = {}
 
   if (fullName && fullName.length > 0) query.fullName = {$regex: fullName, $options: 'i'}
   if (league && league.length > 0) query.league = league
   if (club && club.length > 0) query.club = club
   if (country && country.length > 0) query.country = country
-  if (position && position.length > 0) query.mainposition = position
+  if (position && position.length > 0) query.mainposition = position  
 
   try {
-    const players = await Player.find(query);
+    const players = await Player.find(query).limit(20).skip(page * 20);
     res.send(players);
   } catch(err) {
     console.log(err);

@@ -14,7 +14,12 @@ import {
   Button,
   Input,
 } from "@mui/material";
+import PublicIcon from '@mui/icons-material/Public';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 import PlayerCard from "./components/PlayerCard";
+import RadarIcon from '@mui/icons-material/Radar';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 const App = () => {
   const [players, setPlayers] = useState([]);
@@ -31,7 +36,12 @@ const App = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const fetchData = async () => {
     try {
-      const response = await axios.post(`${API_URL}/getall`, {page});
+      const response = await axios.post(`${API_URL}/getplayers`, {
+        fullName: searchQuery,
+        page: page,
+        ...data,
+      });
+
       setPlayers(response.data);
       setLoading(false);
     } catch (error) {
@@ -52,25 +62,13 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-  setLoading(true);
   fetchData();
   },[page])
 
   const handleSearch = async (event) => {
     event.preventDefault();
     setLoading(true);
-    console.log(data);
-    try {
-      const response = await axios.post(`${API_URL}/getplayers`, {
-        fullName: searchQuery,
-        ...data,
-      });
-
-      setPlayers(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
+    fetchData();
   };
 
   const handleAddPlayer = async (event) => {
@@ -100,18 +98,24 @@ const App = () => {
       <Grid container spacing={2} paddingTop={5} direction="column">
         <Grid item container direction="row" mx="auto">
           <Grid item mx="auto">
-            <form onSubmit={handleSearch}>
-              <Grid container direction='column'>
-                <Grid item mx='auto'>
+          <form onSubmit={handleAddPlayer} >
+              <TextField label="Add player by UID" value={uid} onChange={handleUIDChange} />
+              <Button variant="outlined" type="submit">Add</Button>
+            </form>
+          </Grid>
+          <Grid item mx="auto" >
+          <form onSubmit={handleSearch}>
+              <Grid container direction='column' spacing={2}>
+                <Grid item mx='auto' sx={{display:'flex'}}>
                   <TextField
-                    label="Search"
                     value={searchQuery}
                     onChange={handleInputChange}
                   />
-                  <Button type="submit">Search</Button>
+                  <Button variant='contained' type="submit">Search</Button>
                 </Grid>
-                <Grid item mx='auto'>
-                  <Select value={data.league} label='All' name="league" onChange={handleSearchFieldChange}>
+                <Grid item mx='auto' sx={{display:'flex'}}>
+                  <Button variant='contained'><RestartAltIcon></RestartAltIcon></Button>
+                  <Select startAdornment={<EmojiEventsIcon/>} value={data.league} name="league" onChange={handleSearchFieldChange}>
                     <MenuItem value="" key='Alll'>
                       All
                     </MenuItem>
@@ -122,11 +126,12 @@ const App = () => {
                       : null}
                   </Select>
                   <Select
+                    variant='outlined'
+                    startAdornment={<PublicIcon/>}
                     name="country"
-                    label="Country"
                     onChange={handleSearchFieldChange}
                   >
-                    <MenuItem key='allco' value=" ">All</MenuItem>
+                    <MenuItem key='allco' value="">All</MenuItem>
                     {fields.countries
                       ? fields.countries.map((country) => (
                           <MenuItem key={country.name} value={country.name}>
@@ -136,8 +141,8 @@ const App = () => {
                       : null}
                   </Select>
                   <Select
+                  startAdornment={<Diversity3Icon/>}
                     name="club"
-                    label="Club"
                     onChange={handleSearchFieldChange}
                   >
                     <MenuItem value="" key='allcl'>All</MenuItem>
@@ -148,11 +153,13 @@ const App = () => {
                       : null}
                   </Select>
                   <Select
+                  startAdornment={<RadarIcon/>}
+                  variant='outlined'
                     name="position"
-                    label="Position"
                     onChange={handleSearchFieldChange}
                   >
-                    <MenuItem value="" key='allcl'>All</MenuItem>
+
+                    <MenuItem value="" key='allpos'>All</MenuItem>
                     {fields.positions
                       ? fields.positions.map((position) => (
                           <MenuItem key={position.name} value={position.name}>{position.name}</MenuItem>
@@ -162,17 +169,12 @@ const App = () => {
                 </Grid>
               </Grid>
             </form>
-          </Grid>
-          <Grid item mx="auto">
-            <form onSubmit={handleAddPlayer}>
-              <TextField label="Add player by UID" value={uid} onChange={handleUIDChange} />
-              <Button variant="outlined" type="submit">Add</Button>
-            </form>
+            
           </Grid>
           <Grid item mx="auto">
           Page {page}: <Button variant='outlined' onClick={()=>(page > 0)?setPage(page - 1):""}>-</Button>
       
-      <Button variant='outlined' onClick={()=>setPage(page + 1)}>+</Button>
+        <Button variant='outlined' onClick={()=>setPage(page + 1)}>+</Button>
           </Grid>
         </Grid>
 
