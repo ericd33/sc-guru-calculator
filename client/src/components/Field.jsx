@@ -69,11 +69,15 @@ export default function Field({ formation }) {
               
             }
 
-            if (pnchem > 7) pnchem = 7;
+            if(player.positionName == player.cardData.mainposition) {
+              if (pnchem > 7) pnchem = 7;
+            } else if (player.positionName != player.cardData.mainposition) {
+              if (pnchem > 5) pnchem = 5;
+            }
+            
           }
         })
       }
-      console.log(pnchem + ' ' + player.cardData.fullName)
       players[index].chem = pnchem
     });
     let nchem = 0;
