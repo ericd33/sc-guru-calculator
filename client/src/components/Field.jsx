@@ -79,7 +79,7 @@ export default function Field({ formation }) {
   },[formation])
   return (
     <>
-    <Typography>{teamChem}</Typography>
+    <Typography mx='auto' textAlign='center'>{'Team Chemistry: '+teamChem}</Typography>
     <Grid container spacing={3} paddingTop={11} mx="auto" width="650px">
       <Grid
         item

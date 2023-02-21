@@ -17,6 +17,7 @@ import {
 import PublicIcon from '@mui/icons-material/Public';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
+import AppsIcon from '@mui/icons-material/Apps';
 import PlayerCard from "./components/PlayerCard";
 import RadarIcon from '@mui/icons-material/Radar';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -24,7 +25,7 @@ import SCField from './components/Field';
 import formationsJson from './formations.json';
 const fwPositions = ["ST", "LW", "RW", "CF"];
 const midPositions = ["LM", "CM", "RM", "CAM"];
-const defPositions = ["LB", "CB", "RB"];
+const defPositions = ["LB", "CB", "RB", "RWB", "LWB"];
 
 const App = () => {
 
@@ -301,12 +302,14 @@ const App = () => {
           </Grid>
         )}
       </Grid>
-      <Typography textAlign='center'>{'OVR:' + fieldData.OVR}</Typography>
-      <Select onChange={pickFormationHandler}> 
+      <div style={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
+      <Select startAdornment={<AppsIcon/>} px='auto' onChange={pickFormationHandler}> 
         {formationsJson && formationsJson.map((formation) => {
           return <MenuItem key={formation.name} value={JSON.stringify(formation.formation)} >{formation.name}</MenuItem>
         })}
       </Select>
+      </div>
+      <Typography textAlign='center'>{'OVR:' + fieldData.OVR}</Typography>
       <SCField formation={formation}/>
     </div>
   );

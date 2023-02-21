@@ -129,5 +129,132 @@
         "chem": 0
       }
     }
+  },
+  {
+    "name": "4-3-3",
+    "formation": {
+        "forwards": [
+            {
+            "cardData": "",
+            "positionName": "LW",
+            "chem": 0
+            },
+            {
+            "cardData": "",
+            "positionName": "ST",
+            "chem": 0
+            },
+            {
+            "cardData": "",
+            "positionName": "RW",
+            "chem": 0
+            }
+        ],
+        "midfielders": [
+            {
+            "cardData": "",
+            "positionName": "CM",
+            "chem": 0
+            },
+            {
+            "cardData": "",
+            "positionName": "CAM",
+            "chem": 0
+            },
+            {
+            "cardData": "",
+            "positionName": "CM",
+            "chem": 0
+            }
+        ],
+        "defenders": [
+            {
+            "cardData": "",
+            "positionName": "LB",
+            "chem": 0
+            },
+            {
+            "cardData": "",
+            "positionName": "CB",
+            "chem": 0
+            },
+            {
+            "cardData": "",
+            "positionName": "CB",
+            "chem": 0
+            },
+            {
+            "cardData": "",
+            "positionName": "RB",
+            "chem": 0
+            }
+        ],
+        "gk": {
+            "cardData": "",
+            "positionName": "GK",
+            "chem": 0
+        }
+    }
+  },
+  {
+    "name": "4-3-2-1",
+    "formation" :{
+        "forwards": [
+            {
+            "cardData": "",
+            "positionName": "CF",
+            "chem": 0
+            },
+            {
+                "cardData": "",
+                "positionName": "ST",
+                "chem": 0
+                },
+                {
+                    "cardData": "",
+                    "positionName": "CF",
+                    "chem": 0
+                    }
+        ],
+     "midfielders" : [
+         {
+             "cardData": "",
+             "positionName": "CM",
+             "chem": 0
+         },
+         {
+             "cardData": "",
+             "positionName": "CM",
+             "chem": 0
+         },
+         {
+             "cardData": "",
+             "positionName": "CM",
+             "chem": 0
+         }
+     ],
+     "defenders" : [
+        {
+            "cardData": "",
+            "positionName": "LB",
+            "chem": 0
+        },
+        {
+            "cardData": "",
+            "positionName": "CB",
+            "chem": 0
+        },
+        {
+            "cardData": "",
+            "positionName": "CB",
+            "chem": 0
+        },
+        {
+            "cardData": "",
+            "positionName": "RB",
+            "chem": 0
+        }
+     ]
+    }
   }
 ]
