@@ -109,7 +109,7 @@ export default function Field({ formation }) {
         <PlayerCard sm data={def.cardData} chem={def.chem}/></Grid>):<Grid item xs={1} md={5 / formation.defenders.length}>{def.positionName}</Grid>)}
         
         <Grid item xs={1} sm={1} zeroMinWidth md={5}>
-        {formation && formation.gk.cardData? <PlayerCard sm data={formation.gk.cardData}/>:""}
+        {formation && formation.gk.cardData? <PlayerCard sm chem={formation.gk.chem} data={formation.gk.cardData}/>:""}
         </Grid>
       </Grid>
     </Grid>
