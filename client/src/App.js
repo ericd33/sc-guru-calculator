@@ -94,6 +94,7 @@ const App = () => {
       //calculate overall stats of players
       if (forward.cardData !== "") {
         overallTeamStats += forward.cardData.overallStats;
+        return setFieldData({...fieldData, OVR: overallTeamStats})
       }
     })
 
@@ -101,21 +102,24 @@ const App = () => {
       //calculate overall stats of players
       if (midfielder.cardData !== "") {
         overallTeamStats += midfielder.cardData.overallStats;
+        return setFieldData({...fieldData, OVR: overallTeamStats})
       }
     })
 
     formation.defenders.map((defender, index) => {
       //calculate overall stats of players
       if (defender.cardData !== "") {
-        overallTeamStats += defender.cardData.overall;
+        overallTeamStats += defender.cardData.overallStats;
+        return setFieldData({...fieldData, OVR: overallTeamStats})
       }
     })
 
     if (formation.gk.cardData !== "") {
       overallTeamStats += formation.gk.cardData.overallStats;
+      return setFieldData({...fieldData, OVR: overallTeamStats})
     }
 
-    setFieldData({...fieldData, OVR: overallTeamStats})
+    
   },[formation])
   useEffect(() => {
   fetchData();
@@ -302,8 +306,8 @@ const App = () => {
           </Grid>
         )}
       </Grid>
+      <Typography textAlign='center'>{'OVR:' + fieldData.OVR}</Typography>
       <SCField formation={formation}/>
-      {'OVR:' + fieldData.OVR}
     </div>
   );
 };
