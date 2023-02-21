@@ -24,7 +24,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SCField from './components/Field';
 import formationsJson from './formations.json';
 const fwPositions = ["ST", "LW", "RW", "CF"];
-const midPositions = ["LM", "CM", "RM", "CAM"];
+const midPositions = ["LM", "CM", "RM", "CAM", "CDM"];
 const defPositions = ["LB", "CB", "RB", "RWB", "LWB"];
 
 const App = () => {
