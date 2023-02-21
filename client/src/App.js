@@ -20,6 +20,7 @@ import Diversity3Icon from '@mui/icons-material/Diversity3';
 import PlayerCard from "./components/PlayerCard";
 import RadarIcon from '@mui/icons-material/Radar';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SCField from './components/Field';
 
 const App = () => {
   const [players, setPlayers] = useState([]);
@@ -33,6 +34,29 @@ const App = () => {
     leagues: [''],
     clubs: [''],
     countries: [''],
+  });
+  const [fieldData, setFieldData] = useState({
+    OVR: 0,
+    ChemPoints: 0,
+  })
+  const [formation, setFormation] = useState({
+    forwards: [
+      { cardData: "", positionName: "ST" }
+    ],
+    midfielders: [
+      { cardData: "", positionName: "LM" },
+      { cardData: "", positionName: "CM"},
+      { cardData: "", positionName: "CM" },
+      { cardData: "", positionName: "CM" },
+      { cardData: "", positionName: "RM" },
+    ], 
+    defenders: [
+      { cardData: "", positionName: "LB" },
+      { cardData: "", positionName: "CB" },
+      { cardData: "", positionName: "CB" },
+      { cardData: "", positionName: "RB" },
+    ],
+    gk: { cardData: "", positionName: "GK" },
   });
   const API_URL = process.env.REACT_APP_API_URL;
   const fetchData = async () => {
@@ -63,7 +87,36 @@ const App = () => {
   useEffect(() => {
     fetchFields();
   }, []);
+  
+  useEffect(()=> {
+    let overallTeamStats = 0;
+    formation.forwards.map((forward, index) => {
+      //calculate overall stats of players
+      if (forward.cardData !== "") {
+        overallTeamStats += forward.cardData.overallStats;
+      }
+    })
 
+    formation.midfielders.map((midfielder, index) => {
+      //calculate overall stats of players
+      if (midfielder.cardData !== "") {
+        overallTeamStats += midfielder.cardData.overallStats;
+      }
+    })
+
+    formation.defenders.map((defender, index) => {
+      //calculate overall stats of players
+      if (defender.cardData !== "") {
+        overallTeamStats += defender.cardData.overall;
+      }
+    })
+
+    if (formation.gk.cardData !== "") {
+      overallTeamStats += formation.gk.cardData.overallStats;
+    }
+
+    setFieldData({...fieldData, OVR: overallTeamStats})
+  },[formation])
   useEffect(() => {
   fetchData();
   },[page, data])
@@ -72,6 +125,42 @@ const App = () => {
     event.preventDefault();
     fetchData();
   };
+
+  const assignPlayerHandler = (event) => {
+    event.preventDefault();
+    const playerDataToAdd = JSON.parse(event.currentTarget.getAttribute('data'));
+    let changed = false;
+    formation.forwards.map((forward, index) => {
+      if (forward.positionName === playerDataToAdd.mainposition && forward.cardData === "" && !changed) {
+        const newformation = {...formation};
+        newformation.forwards[index].cardData = playerDataToAdd;
+        changed = true;
+        return setFormation(newformation);
+      }
+    })
+    formation.midfielders.map((midfielder, index) => {
+      if (midfielder.positionName === playerDataToAdd.mainposition && midfielder.cardData === "" && !changed) {
+        const newformation = {...formation};
+        newformation.midfielders[index].cardData = playerDataToAdd;
+        changed = true;
+        return setFormation(newformation);
+      }
+    })
+
+    formation.defenders.map((defender, index) => {
+      if (defender.positionName === playerDataToAdd.mainposition && defender.cardData === "" && !changed) {
+        const newformation = {...formation};
+        newformation.defenders[index].cardData = playerDataToAdd;
+        changed = true;
+        return setFormation(newformation);
+      }
+    })
+    if (formation.gk.cardData === "" && playerDataToAdd.mainposition === "GK") {
+      const newformation = {...formation};
+      newformation.gk.cardData = playerDataToAdd;
+      return setFormation(newformation);
+    }
+  }
 
   const handleAddPlayer = async (event) => {
     event.preventDefault();
@@ -201,19 +290,20 @@ const App = () => {
         <Button variant='outlined' onClick={()=>setPage(page + 1)}>+</Button>
           </Grid>
         </Grid>
-
+        
         {loading ? (
           <Typography>Loading...</Typography>
         ) : (
           <Grid item container spacing={2}>
             {players &&
               players.map((player) => (
-                  <PlayerCard key={player.fullName} data={player} />
+                  <PlayerCard key={player.guruKey} onAssignPlayer={assignPlayerHandler} data={player} />
               ))}
           </Grid>
         )}
       </Grid>
-      
+      <SCField formation={formation}/>
+      {'OVR:' + fieldData.OVR}
     </div>
   );
 };
