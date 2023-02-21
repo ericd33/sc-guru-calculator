@@ -21,6 +21,7 @@ import PlayerCard from "./components/PlayerCard";
 import RadarIcon from '@mui/icons-material/Radar';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SCField from './components/Field';
+import formationsJson from './formations.json';
 const fwPositions = ["ST", "LW", "RW", "CF"];
 const midPositions = ["LM", "CM", "RM", "CAM"];
 const defPositions = ["LB", "CB", "RB"];
@@ -43,25 +44,7 @@ const App = () => {
     OVR: 0,
     ChemPoints: 0,
   })
-  const [formation, setFormation] = useState({
-    forwards: [
-      { cardData: "", positionName: "ST" }
-    ],
-    midfielders: [
-      { cardData: "", positionName: "LM" },
-      { cardData: "", positionName: "CM"},
-      { cardData: "", positionName: "CM" },
-      { cardData: "", positionName: "CM" },
-      { cardData: "", positionName: "RM" },
-    ], 
-    defenders: [
-      { cardData: "", positionName: "LB" },
-      { cardData: "", positionName: "CB" },
-      { cardData: "", positionName: "CB" },
-      { cardData: "", positionName: "RB" },
-    ],
-    gk: { cardData: "", positionName: "GK" },
-  });
+  const [formation, setFormation] = useState(formationsJson[0].formation);
   const API_URL = process.env.REACT_APP_API_URL;
   const fetchData = async () => {
     try {
@@ -79,6 +62,7 @@ const App = () => {
       console.error(error);
     }
   };
+
 
   const fetchFields = async () => {
     try {
@@ -202,6 +186,13 @@ const App = () => {
     loadData({ ...data, [event.target.name]: event.target.value });
   };
 
+  const pickFormationHandler = (event) => {
+    event.preventDefault();
+    const formationToPick = JSON.parse(event.target.value);
+    console.log(formationToPick)
+    setFormation(formationToPick);
+  }
+
   const handleSort = (event) => {
     setPlsort(event.target.value)
   }
@@ -311,6 +302,11 @@ const App = () => {
         )}
       </Grid>
       <Typography textAlign='center'>{'OVR:' + fieldData.OVR}</Typography>
+      <Select onChange={pickFormationHandler}> 
+        {formationsJson && formationsJson.map((formation) => {
+          return <MenuItem key={formation.name} value={JSON.stringify(formation.formation)} >{formation.name}</MenuItem>
+        })}
+      </Select>
       <SCField formation={formation}/>
     </div>
   );
