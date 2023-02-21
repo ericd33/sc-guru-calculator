@@ -10,7 +10,7 @@ export default function PlayerCard({data, sm, onAssignPlayer, chem}) {
   const [borderCalc, setBorderCalc] = useState("")
 
   useEffect(()=>{
-    if (!chem || chem < 5) {
+    if ((!chem) || (chem < 5)) {
       setBorderCalc('3px outset red');
     }
     else if (chem >= 7) {

@@ -43,28 +43,38 @@ export default function Field({ formation }) {
       players.push(def)
     });
     players.push(formation.gk)
-
+    
     // check for chemistry
     players.forEach((player, index) => {
-
+      let pnchem = 0;
+      if(player.positionName == player.cardData.mainposition) {
+        pnchem = 2;
+      }
       if (player.cardData != "") {
+        
+        
         players.forEach((subplayer) => {
           if (subplayer.cardData != "" && subplayer.cardData.guruKey != player.cardData.guruKey) {
+            
             if (player.cardData.league == subplayer.cardData.league) {
-              player.chem = (player.chem?player.chem:0) + 1
-              if (player.chem > 7) player.chem = 7;
+              pnchem = pnchem + 1
+        
             }
             if (player.cardData.country == subplayer.cardData.country) {
-              player.chem = (player.chem?player.chem:0) + 1
-              if (player.chem > 7) player.chem = 7;
+              pnchem = pnchem + 1
+              
             }
             if (player.cardData.club == subplayer.cardData.club) {
-              player.chem = (player.chem?player.chem:0) + 1
-              if (player.chem > 7) player.chem = 7;
+              pnchem = pnchem + 1
+              
             }
+
+            if (pnchem > 7) pnchem = 7;
           }
         })
       }
+      console.log(pnchem + ' ' + player.cardData.fullName)
+      players[index].chem = pnchem
     });
     let nchem = 0;
     players.forEach((player) => {
@@ -76,7 +86,7 @@ export default function Field({ formation }) {
   }
 
   useEffect(()=> {
-    checkPositionsChem();
+    // checkPositionsChem();
     chemCalculator();
   },[formation])
   return (
