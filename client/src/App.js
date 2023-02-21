@@ -21,8 +21,12 @@ import PlayerCard from "./components/PlayerCard";
 import RadarIcon from '@mui/icons-material/Radar';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SCField from './components/Field';
+const fwPositions = ["ST", "LW", "RW", "CF"];
+const midPositions = ["LM", "CM", "RM", "CAM"];
+const defPositions = ["LB", "CB", "RB"];
 
 const App = () => {
+
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [data, loadData] = useState({league: '', club: '', country: '', position: ''});
@@ -135,7 +139,7 @@ const App = () => {
     const playerDataToAdd = JSON.parse(event.currentTarget.getAttribute('data'));
     let changed = false;
     formation.forwards.map((forward, index) => {
-      if (forward.positionName === playerDataToAdd.mainposition && forward.cardData === "" && !changed) {
+      if (fwPositions.includes(playerDataToAdd.mainposition) && forward.cardData === "" && !changed) {
         const newformation = {...formation};
         newformation.forwards[index].cardData = playerDataToAdd;
         changed = true;
@@ -143,7 +147,7 @@ const App = () => {
       }
     })
     formation.midfielders.map((midfielder, index) => {
-      if (midfielder.positionName === playerDataToAdd.mainposition && midfielder.cardData === "" && !changed) {
+      if (midPositions.includes(playerDataToAdd.mainposition) && midfielder.cardData === "" && !changed) {
         const newformation = {...formation};
         newformation.midfielders[index].cardData = playerDataToAdd;
         changed = true;
@@ -152,7 +156,7 @@ const App = () => {
     })
 
     formation.defenders.map((defender, index) => {
-      if (defender.positionName === playerDataToAdd.mainposition && defender.cardData === "" && !changed) {
+      if (defPositions.includes(playerDataToAdd.mainposition) && defender.cardData === "" && !changed) {
         const newformation = {...formation};
         newformation.defenders[index].cardData = playerDataToAdd;
         changed = true;
