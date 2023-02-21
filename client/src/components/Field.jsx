@@ -45,31 +45,33 @@ export default function Field({ formation }) {
     players.push(formation.gk)
 
     // check for chemistry
-    let nchem = 0;
     players.forEach((player, index) => {
-      if (player.chem) {
-        nchem = nchem + player.chem;
-      }
-      if (player.cardData != "") {
 
+      if (player.cardData != "") {
         players.forEach((subplayer) => {
           if (subplayer.cardData != "" && subplayer.cardData.guruKey != player.cardData.guruKey) {
             if (player.cardData.league == subplayer.cardData.league) {
-              nchem = nchem + 1;
               player.chem = (player.chem?player.chem:0) + 1
+              if (player.chem > 7) player.chem = 7;
             }
             if (player.cardData.country == subplayer.cardData.country) {
-              nchem = nchem + 1;
               player.chem = (player.chem?player.chem:0) + 1
+              if (player.chem > 7) player.chem = 7;
             }
             if (player.cardData.club == subplayer.cardData.club) {
-              nchem = nchem + 1;
               player.chem = (player.chem?player.chem:0) + 1
+              if (player.chem > 7) player.chem = 7;
             }
           }
         })
       }
     });
+    let nchem = 0;
+    players.forEach((player) => {
+      if (player.cardData != "") {
+        nchem = nchem + (player.chem?player.chem:0);
+      }
+    })
     setTeamChem(nchem);
   }
 
