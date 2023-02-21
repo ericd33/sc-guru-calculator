@@ -11,22 +11,22 @@ export default function Field({ formation }) {
   const checkPositionsChem = () => {
     formation.forwards.forEach((forward, index) => {
       if (forward.positionName == forward.cardData.mainposition) {
-        formation.forwards[index].chem = formation.forwards[index].chem?formation.forwards[index].chem:0 + 2;
+        formation.forwards[index].chem = (formation.forwards[index].chem?formation.forwards[index].chem:0) + 2;
       }
     });
     formation.midfielders.forEach((mid, index) => {
       if (mid.positionName == mid.cardData.mainposition) {
-        formation.midfielders[index].chem = formation.midfielders[index].chem?formation.midfielders[index].chem:0 + 2;
+        formation.midfielders[index].chem = (formation.midfielders[index].chem?formation.midfielders[index].chem:0) + 2;
       }
     });
     formation.defenders.forEach((def, index) => {
       if (def.positionName == def.cardData.mainposition) {
-        formation.defenders[index].chem = formation.defenders[index].chem?formation.defenders[index].chem:0 + 2;
+        formation.defenders[index].chem = (formation.defenders[index].chem?formation.defenders[index].chem:0) + 2;
       }
     }
     );
     if (formation.gk.positionName == formation.gk.cardData.mainposition) {
-      formation.gk.chem = formation.gk.chem?formation.gk.chem:0 + 2;
+      formation.gk.chem = (formation.gk.chem?formation.gk.chem:0) + 2;
     }
   }
 
