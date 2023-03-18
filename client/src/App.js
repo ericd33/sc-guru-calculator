@@ -37,6 +37,7 @@ const App = () => {
   const [uid, setUID] = useState("");
   const [page, setPage] = useState(0);
   const [Plsort, setPlsort] = useState('OVR Descending')
+  const [formationName, setFormationName] = useState('4-5-1(2)');
   const [fields, setFields] = useState({
     leagues: [''],
     clubs: [''],
@@ -80,7 +81,6 @@ const App = () => {
   
   useEffect(()=> {
     let overallTeamStats = 0;
-    console.log('llego aca')
     formation.forwards.map((forward, index) => {
       //calculate overall stats of players
       if (forward.cardData !== "") {
@@ -203,6 +203,20 @@ const App = () => {
     }
   };
 
+  const exportHandler = (event) => {
+    event.preventDefault();
+    const data = {input: [fieldData.OVR, (fieldData.ChemPoints>=63)?true:false], output: {players: formation, formationName}};
+    const json = JSON.stringify(data);
+    const blob = new Blob([json], {type: "application/json"});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = "formation.json";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+  }
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -226,8 +240,8 @@ const App = () => {
   const pickFormationHandler = (event) => {
     event.preventDefault();
     const formationToPick = JSON.parse(event.target.value);
-    console.log(formationToPick)
-    setFormation(formationToPick);
+    setFormationName(formationToPick.name)
+    setFormation(formationToPick.formation);
   }
 
   const handleSort = (event) => {
@@ -344,11 +358,12 @@ const App = () => {
         <Paper>
       <Select fullWidth startAdornment={<AppsIcon/>} px='auto' onChange={pickFormationHandler}> 
         {formationsJson && formationsJson.map((formation) => {
-          return <MenuItem key={formation.name} value={JSON.stringify(formation.formation)} >{formation.name}</MenuItem>
+          return <MenuItem key={formation.name} value={JSON.stringify(formation)} >{formation.name}</MenuItem>
         })}
       </Select>
       <Typography textAlign='center'>{'OVR:' + fieldData.OVR}</Typography>
       <SCField formation={formation} onRemovePlayer={removePlayerHandler}/>
+      <Button onClick={exportHandler}>Export data</Button>
       </Paper>
       </div>
     </>
