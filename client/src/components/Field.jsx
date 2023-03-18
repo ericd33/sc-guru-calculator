@@ -4,31 +4,9 @@ import { Grid, Typography } from "@mui/material";
 import PlayerCard from "./PlayerCard";
 import { useEffect, useState } from "react";
 
-export default function Field({ formation }) {
+export default function Field({ formation, onRemovePlayer }) {
 
   const [teamChem, setTeamChem] = useState(0)
-
-  const checkPositionsChem = () => {
-    formation.forwards.forEach((forward, index) => {
-      if (forward.positionName == forward.cardData.mainposition) {
-        formation.forwards[index].chem = (formation.forwards[index].chem?formation.forwards[index].chem:0) + 2;
-      }
-    });
-    formation.midfielders.forEach((mid, index) => {
-      if (mid.positionName == mid.cardData.mainposition) {
-        formation.midfielders[index].chem = (formation.midfielders[index].chem?formation.midfielders[index].chem:0) + 2;
-      }
-    });
-    formation.defenders.forEach((def, index) => {
-      if (def.positionName == def.cardData.mainposition) {
-        formation.defenders[index].chem = (formation.defenders[index].chem?formation.defenders[index].chem:0) + 2;
-      }
-    }
-    );
-    if (formation.gk.positionName == formation.gk.cardData.mainposition) {
-      formation.gk.chem = (formation.gk.chem?formation.gk.chem:0) + 2;
-    }
-  }
 
   const chemCalculator = () => {
     const players = []
@@ -114,16 +92,16 @@ export default function Field({ formation }) {
       >
         {formation && formation.forwards.map((forward) => 
         forward.cardData?(<Grid item xs={1} md={5 / formation.forwards.length}>
-        <PlayerCard sm data={forward.cardData} chem={forward.chem}/></Grid>):<Grid item xs={1} md={5 / formation.forwards.length}>{forward.positionName}</Grid>)}
+        <PlayerCard onRemovePlayer={onRemovePlayer} sm data={forward.cardData} chem={forward.chem}/></Grid>):<Grid item xs={1} md={5 / formation.forwards.length}>{forward.positionName}</Grid>)}
         {formation && formation.midfielders.map((mid) => 
         mid.cardData?(<Grid item xs={1} md={5 / formation.midfielders.length}>
-        <PlayerCard sm data={mid.cardData} chem={mid.chem}/></Grid>):<Grid item xs={1} md={5 / formation.midfielders.length}>{mid.positionName}</Grid>)}
+        <PlayerCard onRemovePlayer={onRemovePlayer} sm data={mid.cardData} chem={mid.chem}/></Grid>):<Grid item xs={1} md={5 / formation.midfielders.length}>{mid.positionName}</Grid>)}
         {formation && formation.defenders.map((def) => 
         def.cardData?(<Grid item xs={1} md={5 / formation.defenders.length}>
-        <PlayerCard sm data={def.cardData} chem={def.chem}/></Grid>):<Grid item xs={1} md={5 / formation.defenders.length}>{def.positionName}</Grid>)}
+        <PlayerCard onRemovePlayer={onRemovePlayer} sm data={def.cardData} chem={def.chem}/></Grid>):<Grid item xs={1} md={5 / formation.defenders.length}>{def.positionName}</Grid>)}
         
         <Grid item xs={1} sm={1} zeroMinWidth md={5}>
-        {formation && formation.gk.cardData? <PlayerCard sm chem={formation.gk.chem} data={formation.gk.cardData}/>:""}
+        {formation && formation.gk.cardData? <PlayerCard sm onRemovePlayer={onRemovePlayer} chem={formation.gk.chem} data={formation.gk.cardData}/>:""}
         </Grid>
       </Grid>
     </Grid>

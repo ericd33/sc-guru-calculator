@@ -7,6 +7,7 @@ import {
   Card,
   CardHeader,
   CardMedia,
+  Paper,
   CardContent,
   Typography,
   Select,
@@ -79,6 +80,7 @@ const App = () => {
   
   useEffect(()=> {
     let overallTeamStats = 0;
+    console.log('llego aca')
     formation.forwards.map((forward, index) => {
       //calculate overall stats of players
       if (forward.cardData !== "") {
@@ -107,7 +109,9 @@ const App = () => {
       overallTeamStats += formation.gk.cardData.overallStats;
       return setFieldData({...fieldData, OVR: overallTeamStats})
     }
-
+    if (overallTeamStats === 0) {
+      return setFieldData({...fieldData, OVR: 0})
+    }
     
   },[formation])
   useEffect(() => {
@@ -118,6 +122,38 @@ const App = () => {
     event.preventDefault();
     fetchData();
   };
+
+  const removePlayerHandler = (player) => {
+    const playerDataToRemove = JSON.parse(player.currentTarget.getAttribute('data'));
+    formation.forwards.map((forward, index) => {
+      if (forward.cardData._id === playerDataToRemove._id) {
+        const newformation = {...formation};
+        newformation.forwards[index].cardData = "";
+        return setFormation(newformation);
+      }
+    })
+    formation.midfielders.map((midfielder, index) => {
+      if (midfielder.cardData === playerDataToRemove) {
+        const newformation = {...formation};
+        newformation.midfielders[index].cardData = "";
+        return setFormation(newformation);
+      }
+    }
+    )
+    formation.defenders.map((defender, index) => {
+      if (defender.cardData === playerDataToRemove) {
+        const newformation = {...formation};
+        newformation.defenders[index].cardData = "";
+        return setFormation(newformation);
+      }
+    }
+    )
+    if (formation.gk.cardData === playerDataToRemove) {
+      const newformation = {...formation};
+      newformation.gk.cardData = "";
+      return setFormation(newformation);
+    }
+  }
 
   const assignPlayerHandler = (event) => {
     event.preventDefault();
@@ -199,8 +235,10 @@ const App = () => {
   }
 
   return (
-    <div>
-      <Grid container spacing={2} paddingTop={5} direction="column">
+    <>
+
+      <Grid container spacing={2}  direction="column">
+        <Paper sx={{paddingBottom: 4, paddingTop:5, zIndex:10}} elevation={10}>
         <Grid item container direction="row" mx="auto">
           <Grid item mx="auto">
           <form onSubmit={handleAddPlayer} >
@@ -286,15 +324,15 @@ const App = () => {
           </Grid>
           <Grid item mx="auto">
           Page {page}: <Button variant='outlined' onClick={()=>(page > 0)?setPage(page - 1):""}>-</Button>
-      
-        <Button variant='outlined' onClick={()=>setPage(page + 1)}>+</Button>
+          <Button variant='outlined' onClick={()=>setPage(page + 1)}>+</Button>
           </Grid>
         </Grid>
+        </Paper>
         
         {loading ? (
           <Typography>Loading...</Typography>
         ) : (
-          <Grid item container spacing={2}>
+          <Grid item container sx={{backgroundColor:'#232b2b'}} spacing={2}>
             {players &&
               players.map((player) => (
                   <PlayerCard key={player.guruKey} onAssignPlayer={assignPlayerHandler} data={player} />
@@ -302,16 +340,18 @@ const App = () => {
           </Grid>
         )}
       </Grid>
-      <div style={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
-      <Select startAdornment={<AppsIcon/>} px='auto' onChange={pickFormationHandler}> 
+      <div style={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:'column', backgroundColor:'#232b2b'}}>
+        <Paper>
+      <Select fullWidth startAdornment={<AppsIcon/>} px='auto' onChange={pickFormationHandler}> 
         {formationsJson && formationsJson.map((formation) => {
           return <MenuItem key={formation.name} value={JSON.stringify(formation.formation)} >{formation.name}</MenuItem>
         })}
       </Select>
-      </div>
       <Typography textAlign='center'>{'OVR:' + fieldData.OVR}</Typography>
-      <SCField formation={formation}/>
-    </div>
+      <SCField formation={formation} onRemovePlayer={removePlayerHandler}/>
+      </Paper>
+      </div>
+    </>
   );
 };
 
