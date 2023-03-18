@@ -133,7 +133,7 @@ const App = () => {
       }
     })
     formation.midfielders.map((midfielder, index) => {
-      if (midfielder.cardData === playerDataToRemove) {
+      if (midfielder.cardData._id === playerDataToRemove._id) {
         const newformation = {...formation};
         newformation.midfielders[index].cardData = "";
         return setFormation(newformation);
@@ -141,14 +141,14 @@ const App = () => {
     }
     )
     formation.defenders.map((defender, index) => {
-      if (defender.cardData === playerDataToRemove) {
+      if (defender.cardData._id === playerDataToRemove._id) {
         const newformation = {...formation};
         newformation.defenders[index].cardData = "";
         return setFormation(newformation);
       }
     }
     )
-    if (formation.gk.cardData === playerDataToRemove) {
+    if (formation.gk.cardData._id === playerDataToRemove._id) {
       const newformation = {...formation};
       newformation.gk.cardData = "";
       return setFormation(newformation);
