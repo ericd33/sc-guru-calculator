@@ -268,34 +268,35 @@
       "forwards": [
         {
           "cardData": "",
-          "positionName": "CAM",
-          "chem": 0
-        },
-        {
-          "cardData": "",
           "positionName": "ST",
           "chem": 0
         },
         {
           "cardData": "",
           "positionName": "ST",
-          "chem": 0
-        },
-        {
-          "cardData": "",
-          "positionName": "CAM",
           "chem": 0
         }
+        
       ],
       "midfielders": [
         {
           "cardData": "",
+          "positionName": "CAM",
+          "chem": 0
+        },
+        {
+          "cardData": "",
           "positionName": "CDM",
           "chem": 0
         },
         {
           "cardData": "",
           "positionName": "CDM",
+          "chem": 0
+        },
+        {
+          "cardData": "",
+          "positionName": "CAM",
           "chem": 0
         }
       ],
